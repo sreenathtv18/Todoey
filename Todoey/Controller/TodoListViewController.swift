@@ -11,14 +11,17 @@ import CoreData
 
 class TodoListViewController: UITableViewController {
     var itemArray = [Item]()
+    var selectedCategory: Category? {
+        didSet{
+            loadItems()
+        }
+    }
     var userDefault = UserDefaults.standard
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        loadItems()
     }
     //MARK:- Table Datasource Methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -47,6 +50,7 @@ class TodoListViewController: UITableViewController {
             let item = Item(context: self.context)
             item.title = textField.text!
             item.done = false
+            item.parentCategory = self.selectedCategory
             self.itemArray.append(item)
             self.saveItems()
         }
@@ -68,7 +72,13 @@ class TodoListViewController: UITableViewController {
         }
         tableView.reloadData()
     }
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate,additionalPredicate])
+        } else {
+            request.predicate = categoryPredicate
+        }
         do {
             itemArray = try context.fetch(request)
         }

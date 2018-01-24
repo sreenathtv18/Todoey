@@ -13,6 +13,7 @@
 		0E92A6AF20171C7800CA2F13 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E92A6AD20171C7800CA2F13 /* Main.storyboard */; };
 		0E92A6B120171C7800CA2F13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E92A6B020171C7800CA2F13 /* Assets.xcassets */; };
 		0E92A6B420171C7800CA2F13 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E92A6B220171C7800CA2F13 /* LaunchScreen.storyboard */; };
+		0EC4359020187CFA0057371B /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC4358F20187CFA0057371B /* CategoryTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		0E92A6B020171C7800CA2F13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0E92A6B320171C7800CA2F13 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0E92A6B520171C7800CA2F13 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0EC4358F20187CFA0057371B /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +51,7 @@
 			isa = PBXGroup;
 			children = (
 				0E92A6AB20171C7800CA2F13 /* TodoListViewController.swift */,
+				0EC4358F20187CFA0057371B /* CategoryTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -174,6 +177,7 @@
 				0E03BF2C20176FFA000A1458 /* DataModel.xcdatamodeld in Sources */,
 				0E92A6AC20171C7800CA2F13 /* TodoListViewController.swift in Sources */,
 				0E92A6AA20171C7800CA2F13 /* AppDelegate.swift in Sources */,
+				0EC4359020187CFA0057371B /* CategoryTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
