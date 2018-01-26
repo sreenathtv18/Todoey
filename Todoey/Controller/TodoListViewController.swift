@@ -9,8 +9,10 @@
 import UIKit
 import CoreData
 import RealmSwift
+import ChameleonFramework
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewController {
+    @IBOutlet weak var searchBar: UISearchBar!
     var toDoItems: Results<Item>?
     let realm = try! Realm()
     var selectedCategory: Category? {
@@ -23,15 +25,38 @@ class TodoListViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard let navColor = selectedCategory?.cellBackgroundColor else {fatalError()}
+        updateNavigation(withHexCode: navColor )
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        updateNavigation(withHexCode: "1D9BF6")
+    }
+    //MARK: Set Navigation
+    func updateNavigation(withHexCode hexCode: String) {
+        title = selectedCategory?.name
+        guard let nav = navigationController?.navigationBar else {fatalError("Navigation controller is not loaded")}
+        guard let navColor = UIColor(hexString:hexCode ) else {fatalError()}
+        nav.barTintColor = navColor
+        nav.tintColor = ContrastColorOf(navColor, returnFlat: true)
+        nav.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: ContrastColorOf(navColor, returnFlat: true)]
+        searchBar.barTintColor = navColor
+
+    }
     //MARK:- Table Datasource Methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return toDoItems?.count ?? 1
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let item = toDoItems?[indexPath.row] {
             cell.textLabel?.text = item.title
             cell.accessoryType = item.done ? .checkmark : .none
+            cell.backgroundColor = UIColor(hexString: selectedCategory!.cellBackgroundColor)!.darken(byPercentage: percentageOfColor(index: indexPath.row))
+            cell.textLabel?.textColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true)
+
         } else {
             cell.textLabel?.text = "No Item Added"
         }
@@ -50,6 +75,14 @@ class TodoListViewController: UITableViewController {
             }
         }
         tableView.reloadData()
+    }
+    //MARK: Percentage
+    func percentageOfColor(index: Int) -> CGFloat {
+        if let totalCount = toDoItems?.count {
+            return
+                CGFloat(index)/CGFloat(totalCount)
+        }
+        return CGFloat(0.0)
     }
 
     //MARK: Add New Item
@@ -86,6 +119,17 @@ class TodoListViewController: UITableViewController {
     func loadItems() {
         toDoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         tableView.reloadData()
+    }
+    //MARK:- Swipe Delete Handler
+    override func deleteHandler(indexPath: IndexPath) {
+        do {
+
+            try self.realm.write {
+                self.realm.delete(self.toDoItems![indexPath.row])
+            }
+        } catch {
+            print("Item Can't be deleted \(error)")
+        }
     }
 }
 //MARK:- Search Bar Methods
